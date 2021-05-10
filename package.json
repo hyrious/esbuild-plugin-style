@@ -1,0 +1,23 @@
+{
+  "name": "@hyrious/esbuild-plugin-style",
+  "version": "0.1.0",
+  "description": "style loader for esbuild.",
+  "main": "index.js",
+  "types": "index.ts",
+  "scripts": {
+    "build": "esbuild --bundle --platform=node --outfile=index.js --minify index.ts",
+    "test": "npm run build && cd test && node build.js"
+  },
+  "keywords": [
+    "esbuild",
+    "plugin",
+    "style",
+    "css"
+  ],
+  "author": "hyrious <hyrious@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^15.0.2",
+    "esbuild": "^0.11.20"
+  }
+}
