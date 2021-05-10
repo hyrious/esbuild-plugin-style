@@ -4,6 +4,10 @@
   "description": "style loader for esbuild.",
   "main": "index.js",
   "types": "index.ts",
+  "files": [
+    "index.ts",
+    "index.js"
+  ],
   "scripts": {
     "build": "esbuild --bundle --platform=node --outfile=index.js --minify index.ts",
     "test": "npm run build && cd test && node build.js"
