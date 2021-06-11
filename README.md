@@ -1,6 +1,6 @@
 # @hyrious/esbuild-plugin-style
 
-The style-loader for esbuild.
+The missing style-loader for esbuild.
 
 ## Usage
 
