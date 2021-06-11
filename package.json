@@ -1,6 +1,6 @@
 {
   "name": "@hyrious/esbuild-plugin-style",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "style loader for esbuild.",
   "main": "index.js",
   "types": "index.ts",
@@ -10,7 +10,7 @@
     "index.js.map"
   ],
   "scripts": {
-    "build": "esbuild --bundle --external:clean-css --platform=node --outfile=index.js --minify --sourcemap index.ts",
+    "build": "esbuild --bundle --external:clean-css --platform=node --outfile=index.js --minify --sourcemap --target=node12 index.ts",
     "test": "npm run build && cd test && node build.js"
   },
   "keywords": [

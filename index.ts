@@ -1,4 +1,3 @@
-import type CleanCSS from "clean-css";
 import type { Plugin } from "esbuild";
 import fs from "fs";
 import path from "path";
@@ -17,7 +16,7 @@ function styleId(path: string) {
 export function style({
   cleanCssOptions,
 }: {
-  cleanCssOptions?: CleanCSS.Options;
+  cleanCssOptions?: import("clean-css").Options;
 } = {}): Plugin {
   return {
     name: "style",
@@ -72,9 +71,11 @@ export function style({
   };
 }
 
-async function minifyCSS(css: string, options?: CleanCSS.Options) {
-  var CleanCSS = CleanCSS || (await import("clean-css")).default;
-  const res: CleanCSS.Output = new CleanCSS({ rebase: false, ...options }).minify(css);
+let CleanCSS;
+
+async function minifyCSS(css: string, options?: import("clean-css").Options) {
+  CleanCSS ||= (await import("clean-css")).default;
+  const res: import("clean-css").Output = new CleanCSS(options).minify(css);
   if (res.errors?.length) {
     console.error(res.errors);
     throw res.errors[0];
