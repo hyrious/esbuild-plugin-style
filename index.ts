@@ -21,7 +21,7 @@ export function style({
   return {
     name: "style",
     setup(build) {
-      build.onResolve({ filter: /\.css$/ }, (args) => {
+      build.onResolve({ filter: /\.css$/ }, args => {
         if (args.namespace === "style-stub") {
           return {
             path: args.path,
@@ -32,12 +32,12 @@ export function style({
         if (args.resolveDir === "") return;
 
         return {
-          path: path.isAbsolute(args.path) ? args.path : path.join(args.resolveDir, args.path),
+          path: args.path,
           namespace: "style-stub",
         };
       });
 
-      build.onResolve({ filter: /^__style_helper__$/ }, (args) => ({
+      build.onResolve({ filter: /^__style_helper__$/ }, args => ({
         path: args.path,
         namespace: "style-helper",
         sideEffects: false,
@@ -54,13 +54,13 @@ export function style({
           }`,
       }));
 
-      build.onLoad({ filter: /.*/, namespace: "style-stub" }, async (args) => ({
+      build.onLoad({ filter: /.*/, namespace: "style-stub" }, async args => ({
         contents: `import { updateStyle } from "__style_helper__"
         import css from ${JSON.stringify(args.path)}
         updateStyle(${styleId(args.path)}, css)`,
       }));
 
-      build.onLoad({ filter: /.*/, namespace: "style-content" }, async (args) => {
+      build.onLoad({ filter: /.*/, namespace: "style-content" }, async args => {
         const raw = await fs.promises.readFile(args.path, "utf8");
         return {
           contents: await minifyCSS(raw, cleanCssOptions),
@@ -80,7 +80,7 @@ async function minifyCSS(css: string, options?: import("clean-css").Options) {
     console.error(res.errors);
     throw res.errors[0];
   }
-  const warnings = res.warnings?.filter((m) => !m.includes("remote @import"));
+  const warnings = res.warnings?.filter(m => !m.includes("remote @import"));
   if (warnings?.length) {
     console.warn(warnings.join("\n"));
   }

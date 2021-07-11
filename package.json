@@ -1,6 +1,6 @@
 {
   "name": "@hyrious/esbuild-plugin-style",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "style loader for esbuild.",
   "main": "index.js",
   "types": "index.ts",
@@ -22,11 +22,11 @@
   "author": "hyrious <hyrious@outlook.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/clean-css": "^4.2.4",
-    "@types/node": "^15.12.2",
-    "esbuild": "^0.12.8"
+    "@types/clean-css": "^4.2.5",
+    "@types/node": "^16.3.1",
+    "esbuild": "^0.12.15"
   },
   "dependencies": {
-    "clean-css": "^5.1.2"
+    "clean-css": "^5.1.3"
   }
 }

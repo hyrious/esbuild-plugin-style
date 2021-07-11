@@ -1,6 +1,10 @@
 {
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.sortImports": true
+  },
   "prettier.tabWidth": 2,
-  "prettier.endOfLine": "auto"
+  "prettier.endOfLine": "auto",
+  "prettier.arrowParens": "avoid"
 }
