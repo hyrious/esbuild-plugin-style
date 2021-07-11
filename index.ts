@@ -32,7 +32,7 @@ export function style({
         if (args.resolveDir === "") return;
 
         return {
-          path: args.path,
+          path: path.isAbsolute(args.path) ? args.path : path.join(args.resolveDir, args.path),
           namespace: "style-stub",
         };
       });
