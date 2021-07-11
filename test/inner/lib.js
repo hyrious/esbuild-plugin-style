@@ -1,6 +1,5 @@
 import "./style.css";
+console.log("lib");
 import "./style.css";
 import "./style.css";
-console.log(1);
 import "./style.css";
-import "./inner/lib.js";
