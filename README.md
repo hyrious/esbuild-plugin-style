@@ -40,14 +40,8 @@ console.log(1);
 ### Options
 
 ```ts
-export function style({
-  cleanCssOptions,
-}: {
-  cleanCssOptions?: CleanCSS.Options;
-} = {}): Plugin;
+export function style({ minify = true, charset = "utf8" }): Plugin;
 ```
-
-See [CleanCSS.Options](https://github.com/jakubpawlowicz/clean-css).
 
 ## License
 
