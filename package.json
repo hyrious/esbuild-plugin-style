@@ -1,7 +1,7 @@
 {
   "name": "@hyrious/esbuild-plugin-style",
-  "version": "0.2.2",
-  "description": "style loader for esbuild.",
+  "version": "0.3.0",
+  "description": "The missing style loader for esbuild.",
   "main": "index.js",
   "types": "index.ts",
   "files": [
@@ -10,7 +10,7 @@
     "index.js.map"
   ],
   "scripts": {
-    "build": "esbuild --bundle --external:clean-css --platform=node --outfile=index.js --minify --sourcemap --target=node12 index.ts",
+    "build": "esbuild --bundle --external:esbuild --platform=node --outfile=index.js --minify --sourcemap --target=node12 index.ts",
     "test": "npm run build && cd test && node build.js"
   },
   "keywords": [
@@ -22,11 +22,7 @@
   "author": "hyrious <hyrious@outlook.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/clean-css": "^4.2.5",
     "@types/node": "^16.3.1",
     "esbuild": "^0.12.15"
-  },
-  "dependencies": {
-    "clean-css": "^5.1.3"
   }
 }

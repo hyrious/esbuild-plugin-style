@@ -1,88 +1,66 @@
-import type { Plugin } from "esbuild";
-import fs from "fs";
+import esbuild, { BuildOptions, Charset, Plugin } from "esbuild";
 import path from "path";
 
-const styleMap = new Map<string, number>();
-function styleId(path: string) {
-  if (styleMap.has(path)) {
-    return styleMap.get(path);
-  } else {
-    const id = styleMap.size;
-    styleMap.set(path, id);
-    return id;
-  }
+export interface StylePluginOptions {
+  /**
+   * whether to minify the css code.
+   * @default true
+   */
+  minify?: boolean;
+
+  /**
+   * css charset.
+   * @default 'utf8'
+   */
+  charset?: Charset;
 }
 
-export function style({
-  cleanCssOptions,
-}: {
-  cleanCssOptions?: import("clean-css").Options;
-} = {}): Plugin {
+// https://github.com/evanw/esbuild/issues/20#issuecomment-802269745
+export function style({ minify = true, charset = "utf8" }: StylePluginOptions = {}): Plugin {
+  const options: BuildOptions = { logLevel: "silent", bundle: true, charset, minify };
+
   return {
     name: "style",
-    setup(build) {
-      build.onResolve({ filter: /\.css$/ }, args => {
+    setup({ onResolve, onLoad }) {
+      onResolve({ filter: /\.css$/ }, args => {
         if (args.namespace === "style-stub") {
-          return {
-            path: args.path,
-            namespace: "style-content",
-          };
+          return { path: args.path, namespace: "style-content" };
         }
-
-        if (args.resolveDir === "") return;
-
-        return {
-          path: path.isAbsolute(args.path) ? args.path : path.join(args.resolveDir, args.path),
-          namespace: "style-stub",
-        };
+        return { path: path.join(args.resolveDir, args.path), namespace: "style-stub" };
       });
 
-      build.onResolve({ filter: /^__style_helper__$/ }, args => ({
+      onResolve({ filter: /^__style_helper__$/ }, args => ({
         path: args.path,
         namespace: "style-helper",
         sideEffects: false,
       }));
 
-      build.onLoad({ filter: /.*/, namespace: "style-helper" }, async () => ({
-        contents: `const cache = new Set()
-          export function updateStyle(id, text) {
-            if (cache.has(id)) return; cache.add(id)
+      onLoad({ filter: /.*/, namespace: "style-helper" }, async () => ({
+        contents: `
+          export function injectStyle(text) {
             const style = document.createElement('style')
-            style.dataset.id = id
-            style.append(text)
-            document.head.append(style)
-          }`,
+            const node = document.createTextNode(text)
+            style.appendChild(node)
+            document.head.appendChild(style)
+          }
+        `,
       }));
 
-      build.onLoad({ filter: /.*/, namespace: "style-stub" }, async args => ({
-        contents: `import { updateStyle } from "__style_helper__"
+      onLoad({ filter: /.*/, namespace: "style-stub" }, async args => ({
+        contents: `import { injectStyle } from "__style_helper__"
         import css from ${JSON.stringify(args.path)}
-        updateStyle(${styleId(args.path)}, css)`,
+        injectStyle(css)`,
       }));
 
-      build.onLoad({ filter: /.*/, namespace: "style-content" }, async args => {
-        const raw = await fs.promises.readFile(args.path, "utf8");
+      onLoad({ filter: /.*/, namespace: "style-content" }, async args => {
+        const result = await esbuild.build({ entryPoints: [args.path], ...options, write: false });
         return {
-          contents: await minifyCSS(raw, cleanCssOptions),
+          errors: result.errors,
+          warnings: result.warnings,
+          contents: result.outputFiles[0].text,
           loader: "text",
         };
       });
     },
   };
-}
-
-let CleanCSS;
-
-async function minifyCSS(css: string, options?: import("clean-css").Options) {
-  CleanCSS ||= (await import("clean-css")).default;
-  const res: import("clean-css").Output = new CleanCSS(options).minify(css);
-  if (res.errors?.length) {
-    console.error(res.errors);
-    throw res.errors[0];
-  }
-  const warnings = res.warnings?.filter(m => !m.includes("remote @import"));
-  if (warnings?.length) {
-    console.warn(warnings.join("\n"));
-  }
-  return res.styles;
 }
