@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.3.0
+## 0.3.1
 
 - No more `clean-css` dependency, it uses the builtin css loader in esbuild now.
 - Now it exports a function `style({ minify?: boolean, charset?: 'utf8' | 'ascii' })`.
+- It can show relative path instead of absolute path in un-minified output.
 
 ## 0.2.1
 
