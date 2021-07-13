@@ -6,5 +6,6 @@
   },
   "prettier.tabWidth": 2,
   "prettier.endOfLine": "auto",
-  "prettier.arrowParens": "avoid"
+  "prettier.arrowParens": "avoid",
+  "prettier.printWidth": 110
 }
