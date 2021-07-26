@@ -1,4 +1,5 @@
 import esbuild, { BuildOptions, Charset, Plugin } from "esbuild";
+import fs from "fs";
 import path from "path";
 
 export interface StylePluginOptions {
@@ -23,12 +24,18 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
       const cwd = process.cwd();
       const opt: BuildOptions = { logLevel: "silent", bundle: true, write: false, charset, minify };
 
-      onResolve({ filter: /\.css$/ }, args => {
-        if (args.namespace === "style-stub") return { path: args.path, namespace: "style-content" };
-        return { path: path.relative(cwd, path.join(args.resolveDir, args.path)), namespace: "style-stub" };
+      onResolve({ filter: /\.css$/, namespace: "file" }, args => {
+        const absPath = path.join(args.resolveDir, args.path);
+        const relPath = path.relative(cwd, absPath);
+        const resolved = fs.existsSync(absPath) ? relPath : args.path;
+        return { path: resolved, namespace: "style-stub" };
       });
 
-      onResolve({ filter: /^__style_helper__$/ }, args => ({
+      onResolve({ filter: /\.css$/, namespace: "style-stub" }, args => {
+        return { path: args.path, namespace: "style-content" };
+      });
+
+      onResolve({ filter: /^__style_helper__$/, namespace: "style-stub" }, args => ({
         path: args.path,
         namespace: "style-helper",
         sideEffects: false,
