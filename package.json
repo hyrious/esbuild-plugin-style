@@ -1,6 +1,6 @@
 {
   "name": "@hyrious/esbuild-plugin-style",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "The missing style loader for esbuild.",
   "repository": "hyrious/esbuild-plugin-style",
   "main": "index.js",

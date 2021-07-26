@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+
+- Fixed import nested css package from nested file.\
+  e.g. `inner/lib.js` imports `sanitize.css/forms.css` (a package)
+
 ## 0.3.1
 
 - No more `clean-css` dependency, it uses the builtin css loader in esbuild now.
