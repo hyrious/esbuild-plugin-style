@@ -44,8 +44,8 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
       onLoad({ filter: /.*/, namespace: "style-helper" }, async () => ({
         contents: `
           export function injectStyle(text) {
-            const style = document.createElement('style')
-            const node = document.createTextNode(text)
+            var style = document.createElement('style')
+            var node = document.createTextNode(text)
             style.appendChild(node)
             document.head.appendChild(style)
           }

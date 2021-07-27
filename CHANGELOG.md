@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3
+
+- Use `var` instead of `const` for better compatibility with ES5.
+
 ## 0.3.2
 
 - Fixed import nested css package from nested file.\
