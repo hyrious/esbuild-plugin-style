@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4
+
+- Invalidate the `injectStyle` function when there's no `document`. For example, in [Next.js](https://nextjs.org).
+
 ## 0.3.3
 
 - Use `var` instead of `const` for better compatibility with ES5.

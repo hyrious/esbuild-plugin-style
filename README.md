@@ -23,9 +23,7 @@ console.log(1);
 ```
 
 ```css
-body {
-  color: red;
-}
+body { color: red; }
 ```
 
 Outputs (things like):
