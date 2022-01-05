@@ -1,8 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Use the esbuild instance from plugin args instead of global require.
+- Make `style` also the default export.
+
 ## 0.3.4
 
-- Invalidate the `injectStyle` function when there's no `document`. For example, in [Next.js](https://nextjs.org).
+- Invalidate the `injectStyle` function when there's no `document`, for SSR.
 
 ## 0.3.3
 

@@ -1,4 +1,4 @@
-import esbuild, { BuildOptions, Charset, Plugin } from "esbuild";
+import type { BuildOptions, Charset, Plugin } from "esbuild";
 import fs from "fs";
 import path from "path";
 
@@ -18,11 +18,14 @@ export interface StylePluginOptions {
 
 // https://github.com/evanw/esbuild/issues/20#issuecomment-802269745
 export function style({ minify = true, charset = "utf8" }: StylePluginOptions = {}): Plugin {
+  let esbuild_shim: typeof import("esbuild") | undefined;
+
   return {
     name: "style",
-    setup({ onResolve, onLoad }) {
+    setup({ onResolve, onLoad, esbuild }) {
       const cwd = process.cwd();
       const opt: BuildOptions = { logLevel: "silent", bundle: true, write: false, charset, minify };
+      const require_esbuild = () => esbuild || (esbuild_shim ||= require("esbuild"));
 
       onResolve({ filter: /\.css$/, namespace: "file" }, args => {
         const absPath = path.join(args.resolveDir, args.path);
@@ -64,9 +67,11 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
 
       onLoad({ filter: /.*/, namespace: "style-content" }, async args => {
         const options = { entryPoints: [args.path], ...opt };
-        const { errors, warnings, outputFiles } = await esbuild.build(options);
+        const { errors, warnings, outputFiles } = await require_esbuild().build(options);
         return { errors, warnings, contents: outputFiles![0].text, loader: "text" };
       });
     },
   };
 }
+
+export default style;
