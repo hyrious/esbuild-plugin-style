@@ -4,6 +4,7 @@
 
 - Use the esbuild instance from plugin args instead of global require.
 - Make `style` also the default export.
+- Simplify `onResolve`, `onLoad` usage.
 
 ## 0.3.4
 
