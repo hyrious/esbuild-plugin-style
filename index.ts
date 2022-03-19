@@ -18,9 +18,6 @@ export interface StylePluginOptions {
 export function style({ minify = true, charset = "utf8" }: StylePluginOptions = {}): Plugin {
   let esbuild_shim: typeof import("esbuild") | undefined;
 
-  const EmptySourceMap =
-    "data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIiJdLCJtYXBwaW5ncyI6IkEifQ==";
-
   return {
     name: "style",
     setup({ onResolve, onLoad, esbuild }) {
@@ -36,10 +33,7 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
         return {
           errors,
           warnings,
-          contents: `
-            import { inject_style } from "__style_helper__"
-            inject_style(${JSON.stringify(css)})
-          `,
+          contents: `import { inject_style } from "__style_helper__"; inject_style(${JSON.stringify(css)})`,
         };
       });
 
@@ -48,17 +42,15 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
       });
 
       onLoad({ filter: /.*/, namespace: "style-helper" }, () => ({
-        contents: `
-          export function inject_style(text) {
-            if (typeof document !== 'undefined') {
-              var style = document.createElement('style')
-              var node = document.createTextNode(text)
-              style.appendChild(node)
-              document.head.appendChild(style)
-            }
-          }
-          //# sourceMappingURL=${EmptySourceMap}
-        `,
+        contents:
+          `export function inject_style(text) {\n` +
+          `  if (typeof document !== 'undefined') {\n` +
+          `    var style = document.createElement('style')\n` +
+          `    var node = document.createTextNode(text)\n` +
+          `    style.appendChild(node)\n` +
+          `    document.head.appendChild(style)\n` +
+          `  }\n` +
+          `}`,
       }));
     },
   };
