@@ -1,6 +1,4 @@
 import type { BuildOptions, Charset, Plugin } from "esbuild";
-import fs from "fs";
-import path from "path";
 
 export interface StylePluginOptions {
   /**
@@ -19,6 +17,9 @@ export interface StylePluginOptions {
 // https://github.com/evanw/esbuild/issues/20#issuecomment-802269745
 export function style({ minify = true, charset = "utf8" }: StylePluginOptions = {}): Plugin {
   let esbuild_shim: typeof import("esbuild") | undefined;
+
+  const EmptySourceMap =
+    "data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIiJdLCJtYXBwaW5ncyI6IkEifQ==";
 
   return {
     name: "style",
@@ -56,6 +57,7 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
               document.head.appendChild(style)
             }
           }
+          //# sourceMappingURL=${EmptySourceMap}
         `,
       }));
     },

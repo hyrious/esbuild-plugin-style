@@ -4,5 +4,6 @@ require("esbuild").build({
   bundle: true,
   outfile: "./out.js",
   plugins: [require("..").style()],
-  target: 'es5'
+  target: 'es5',
+  sourcemap: true
 }).catch(() => process.exit(1))
