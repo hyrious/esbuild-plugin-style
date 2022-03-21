@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.5
 
 - Use the esbuild instance from plugin args instead of global require.
 - Make `style` also the default export.

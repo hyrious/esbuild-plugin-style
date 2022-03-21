@@ -33,7 +33,7 @@ export function style({ minify = true, charset = "utf8" }: StylePluginOptions = 
         return {
           errors,
           warnings,
-          contents: `import { inject_style } from "__style_helper__"; inject_style(${JSON.stringify(css)})`,
+          contents: `import { inject_style } from "__style_helper__"\ninject_style(${JSON.stringify(css)})`,
         };
       });
 
